@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sewa Directory Premium</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
+    padding: 10px;
+    margin: 0;
+    padding-bottom: 120px;
+}
+
+/* TOP BAR */
+.top-bar{
+    background: #222;
+    color: white;
+    padding: 12px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom: 3px solid #007bff;
+}
+
+/* MAIN CARD */
+.container{
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    max-width: 1000px;
+    margin: 15px auto;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+}
+
+.row{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+input, select{
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    width: 220px;
+}
+
+button{
+    padding: 10px 18px;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.call-btn{ background: #25D366; }
+.whatsapp-btn{ background: #128C7E; }
+.menu-btn{ background: #007bff; margin: 5px; }
+.back-btn{ background: #6c757d; }
+
+.page{ display: none; }
+.active{ display: block; }
+.center{ text-align: center; }
+
+/* LOCATION */
+.location-grid{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.location-box{
+    background: #eaeaea;
+    padding: 12px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 6px;
+}
+
+.location-box a{
+    text-decoration: none;
+    color: #1565c0;
+}
+
+/* WEATHER GLASS CARD */
+.weather-footer{
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 95%;
+    max-width: 1100px;
+    padding: 14px 18px;
+    border-radius: 18px;
+    background: rgba(31,41,55,0.85);
+    backdrop-filter: blur(14px);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+}
+
+.weather-box{
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.weather-icon{
+    font-size: 28px;
+    animation: floatIcon 2s infinite ease-in-out;
+}
+
+@keyframes floatIcon{
+    0%{ transform: translateY(0px); }
+    50%{ transform: translateY(-5px); }
+    100%{ transform: translateY(0px); }
+}
+
+.alert-blink{
+    animation: blink 1s infinite;
+}
+
+@keyframes blink{
+    0%{opacity:1;}
+    50%{opacity:0.4;}
+    100%{opacity:1;}
+}
+
+@media (max-width:600px){
+    input, select, button{
+        width: 100%;
+    }
+
+    .row{
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- DATE TIME -->
+<div class="top-bar" id="dateTimeBar">
+    --/--/---- --:--
+</div>
+
+<div class="container">
+
+    <!-- MENU -->
+    <div id="menuPage" class="page active center">
+        <h1>Sewa Directory & Locations</h1>
+        <button class="menu-btn" onclick="showPage('inchargePage')">Incharge Directory</button>
+        <button class="menu-btn" onclick="showPage('sewaPage')">SK / SR / BSK / Pathi</button>
+        <button class="menu-btn" onclick="showPage('locationPage')">Alwar Locations</button>
+    </div>
+
+    <!-- INCHARGE -->
+    <div id="inchargePage" class="page">
+        <button class="back-btn" onclick="showPage('menuPage')">← Back</button>
+        <h2>Incharge</h2>
+
+        <div class="row">
+            <input list="areaList" id="area" placeholder="Select Area">
+            <datalist id="areaList"></datalist>
+
+            <input list="nameList" id="name" placeholder="Select Name">
+            <datalist id="nameList"></datalist>
+
+            <input id="mobile" placeholder="Mobile no" readonly>
+
+            <button class="call-btn" onclick="callNumber()">Call</button>
+            <button class="whatsapp-btn" onclick="whatsappNumber()">WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- SEWA -->
+    <div id="sewaPage" class="page">
+        <button class="back-btn" onclick="showPage('menuPage')">← Back</button>
+        <h2>SK / SR / BSK / Pathi</h2>
+
+        <div class="row">
+            <select id="sewa">
+                <option value="">Select Sewa</option>
+                <option>SK</option>
+                <option>SR</option>
+                <option>BSK</option>
+                <option>Pathi</option>
+            </select>
+
+            <input list="sewaNameList" id="sewaName" placeholder="Select Name">
+            <datalist id="sewaNameList"></datalist>
+
+            <input id="sewaMobile" placeholder="Mobile no" readonly>
+            <input id="batchId" placeholder="Batch ID" readonly>
+
+            <button class="call-btn" onclick="callNumber2()">Call</button>
+            <button class="whatsapp-btn" onclick="whatsappNumber2()">WhatsApp</button>
+        </div>
+    </div>
+
+    <!-- LOCATION -->
+    <div id="locationPage" class="page">
+        <button class="back-btn" onclick="showPage('menuPage')">← Back</button>
+        <h2>Alwar Locations</h2>
+        <div class="location-grid" id="locationGrid"></div>
+    </div>
+
+</div>
+
+<!-- WEATHER -->
+<div class="weather-footer">
+    <div class="weather-box weather-icon" id="weatherIcon">☀️</div>
+    <div class="weather-box" id="weatherTemp">🌡️ --°C</div>
+    <div class="weather-box" id="weatherWind">💨 -- km/h</div>
+    <div class="weather-box" id="weatherCondition">Loading...</div>
+    <div class="weather-box" id="forecastTime">⏳ Forecast --</div>
+    <div class="weather-box" id="weatherWarning">⚠️ Normal</div>
+</div>
+
+<script>
+let data1=[], data2=[], data3=[];
+
+const sheetId="1IAjCph7u4mss0ncPl3CW5AcfdSgI1eaMaQpeqkvkTns";
+
+const data1Url=`https://opensheet.elk.sh/${sheetId}/data1`;
+const data2Url=`https://opensheet.elk.sh/${sheetId}/data2`;
+const data3Url=`https://opensheet.elk.sh/${sheetId}/data3`;
+
+/* DATE TIME */
+function updateDateTime(){
+    const now = new Date();
+
+    let day = String(now.getDate()).padStart(2,'0');
+    let month = String(now.getMonth()+1).padStart(2,'0');
+    let year = now.getFullYear();
+    let hours = String(now.getHours()).padStart(2,'0');
+    let minutes = String(now.getMinutes()).padStart(2,'0');
+
+    document.getElementById("dateTimeBar").innerText =
+        `${day}/${month}/${year} ${hours}:${minutes}`;
+}
+
+/* PAGE */
+function showPage(id){
+    document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+/* SHEET */
+async function loadSheetData(){
+    data1 = await (await fetch(data1Url)).json();
+    data2 = await (await fetch(data2Url)).json();
+    data3 = await (await fetch(data3Url)).json();
+
+    loadAreaList();
+    loadLocationData();
+}
+
+function loadAreaList(){
+    const areas=[...new Set(data1.filter(d=>d.area).map(d=>d.area.trim()))];
+    const areaList=document.getElementById("areaList");
+    areaList.innerHTML="";
+
+    areas.forEach(a=>{
+        let opt=document.createElement("option");
+        opt.value=a;
+        areaList.appendChild(opt);
+    });
+}
+
+/* EVENTS */
+document.getElementById("area").addEventListener("input", function(){
+    let names=data1.filter(d=>d.area===this.value.trim());
+    const nameList=document.getElementById("nameList");
+    nameList.innerHTML="";
+
+    names.forEach(p=>{
+        let opt=document.createElement("option");
+        opt.value=p.name;
+        nameList.appendChild(opt);
+    });
+});
+
+document.getElementById("name").addEventListener("input", function(){
+    let person=data1.find(d=>d.name===this.value.trim());
+    document.getElementById("mobile").value=person ? person.mobile : "";
+});
+
+document.getElementById("sewa").addEventListener("change", function(){
+    let names=data2.filter(d=>d.sewa===this.value.trim());
+    const list=document.getElementById("sewaNameList");
+    list.innerHTML="";
+
+    names.forEach(p=>{
+        let opt=document.createElement("option");
+        opt.value=p.name;
+        list.appendChild(opt);
+    });
+});
+
+document.getElementById("sewaName").addEventListener("input", function(){
+    let person=data2.find(d=>d.name===this.value.trim());
+
+    if(person){
+        document.getElementById("sewaMobile").value=person.mobile || "";
+        document.getElementById("batchId").value=person.batchId || "";
+    }
+});
+
+/* CALL */
+function callNumber(){
+    let num=document.getElementById("mobile").value;
+    if(num) window.location.href="tel:"+num;
+}
+
+function callNumber2(){
+    let num=document.getElementById("sewaMobile").value;
+    if(num) window.location.href="tel:"+num;
+}
+
+function whatsappNumber(){
+    let num=document.getElementById("mobile").value;
+    if(num) window.open("https://wa.me/91"+num,"_blank");
+}
+
+function whatsappNumber2(){
+    let num=document.getElementById("sewaMobile").value;
+    if(num) window.open("https://wa.me/91"+num,"_blank");
+}
+
+/* LOCATION */
+function loadLocationData(){
+    const grid=document.getElementById("locationGrid");
+    grid.innerHTML="";
+
+    data3.forEach(loc=>{
+        let box=document.createElement("div");
+        box.className="location-box";
+
+        let link=document.createElement("a");
+        let lat=loc.lat || loc.latitude;
+        let lng=loc.lng || loc.longitude;
+        let name=loc.name || loc.area || "Location";
+
+        link.href=`https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+        link.target="_blank";
+        link.textContent=name;
+
+        box.appendChild(link);
+        grid.appendChild(box);
+    });
+}
+
+/* WEATHER */
+async function loadWeatherStatus(){
+    const res = await fetch(
+        "https://api.open-meteo.com/v1/forecast?latitude=27.56&longitude=76.61&current=temperature_2m,wind_speed_10m,weather_code&hourly=weather_code"
+    );
+
+    const data = await res.json();
+
+    let temp = data.current.temperature_2m;
+    let wind = data.current.wind_speed_10m;
+    let code = data.current.weather_code;
+
+    let condition="Clear";
+    let icon="☀️";
+    let warning="Normal";
+
+    if(code >= 1 && code <= 3){
+        condition="Cloudy";
+        icon="☁️";
+    }
+
+    if(code >= 61){
+        condition="Rain";
+        icon="🌧️";
+        warning="Rain Alert";
+    }
+
+    if(code >= 95){
+        condition="Storm";
+        icon="⛈️";
+        warning="Storm Warning";
+    }
+
+    let forecastHour="--";
+    let hourlyCodes=data.hourly.weather_code;
+    let times=data.hourly.time;
+
+    for(let i=0;i<hourlyCodes.length;i++){
+        if(hourlyCodes[i] >= 61){
+            let date=new Date(times[i]);
+            forecastHour=date.toLocaleString("en-GB",{
+                day:"2-digit",
+                month:"2-digit",
+                hour:"2-digit",
+                minute:"2-digit"
+            });
+            break;
+        }
+    }
+
+    document.getElementById("weatherIcon").innerText=icon;
+    document.getElementById("weatherTemp").innerText=`🌡️ ${temp}°C`;
+    document.getElementById("weatherWind").innerText=`💨 ${wind} km/h`;
+    document.getElementById("weatherCondition").innerText=condition;
+    document.getElementById("forecastTime").innerText=`⏳ ${forecastHour}`;
+    document.getElementById("weatherWarning").innerText=`⚠️ ${warning}`;
+}
+
+/* INIT */
+loadSheetData();
+updateDateTime();
+setInterval(updateDateTime,1000);
+loadWeatherStatus();
+setInterval(loadWeatherStatus,300000);
+</script>
+
+</body>
+</html>
